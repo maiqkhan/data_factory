@@ -1,0 +1,20 @@
+{
+	"name": "CICD_Demo",
+	"properties": {
+		"activities": [
+			{
+				"name": "Wait1",
+				"description": "Added as a part of Feature 1",
+				"type": "Wait",
+				"state": "Active",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
+				}
+			}
+		],
+		"annotations": []
+	}
+}
