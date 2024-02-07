@@ -1,0 +1,9 @@
+{
+	"name": "mkhan2431dp203adf",
+	"location": "canadacentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "e2e028e8-7e35-4633-8f27-bb941d60757d",
+		"tenantId": "0b62dffa-3e24-41de-b8c4-a1efc47a9e68"
+	}
+}

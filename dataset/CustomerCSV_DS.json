@@ -1,0 +1,25 @@
+{
+	"name": "CustomerCSV_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ADLSg2_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Customer.csv",
+				"folderPath": "mkhansqlserver/AdventureWorks/Customer/Year=2023/Month=10/Day=20",
+				"fileSystem": "raw"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
