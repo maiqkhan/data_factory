@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "mkhan2431dp203adf"
+		},
+		"ADLSg2_LS_accountKey": {
+			"value": ""
+		},
+		"AdventureWorksSQLDB_LS_connectionString": {
+			"value": ""
+		},
+		"GenericAzureSQLDB_LS_connectionString": {
+			"value": ""
+		},
+		"ADLSg2_LS_properties_typeProperties_url": {
+			"value": "https://mkhan2431dp203demo.dfs.core.windows.net/"
+		},
+		"Rebrickable REST API_properties_typeProperties_url": {
+			"value": "https://rebrickable.com/api/v3/lego/minifigs/"
+		}
+	}
+}

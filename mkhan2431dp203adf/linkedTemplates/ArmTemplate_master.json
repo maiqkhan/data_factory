@@ -1,0 +1,77 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "mkhan2431dp203adf"
+		},
+		"ADLSg2_LS_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLSg2_LS'"
+		},
+		"AdventureWorksSQLDB_LS_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AdventureWorksSQLDB_LS'"
+		},
+		"GenericAzureSQLDB_LS_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'GenericAzureSQLDB_LS'"
+		},
+		"ADLSg2_LS_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://mkhan2431dp203demo.dfs.core.windows.net/"
+		},
+		"Rebrickable REST API_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://rebrickable.com/api/v3/lego/minifigs/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "mkhan2431dp203adf_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"ADLSg2_LS_accountKey": {
+						"value": "[parameters('ADLSg2_LS_accountKey')]"
+					},
+					"AdventureWorksSQLDB_LS_connectionString": {
+						"value": "[parameters('AdventureWorksSQLDB_LS_connectionString')]"
+					},
+					"GenericAzureSQLDB_LS_connectionString": {
+						"value": "[parameters('GenericAzureSQLDB_LS_connectionString')]"
+					},
+					"ADLSg2_LS_properties_typeProperties_url": {
+						"value": "[parameters('ADLSg2_LS_properties_typeProperties_url')]"
+					},
+					"Rebrickable REST API_properties_typeProperties_url": {
+						"value": "[parameters('Rebrickable REST API_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
