@@ -1,0 +1,12 @@
+{
+	"name": "minifigs",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Rebrickable REST API",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	}
+}
