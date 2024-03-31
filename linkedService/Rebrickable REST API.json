@@ -3,10 +3,15 @@
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"description": "This service is to connect to Rebrickable's V3 REST API.",
+		"parameters": {
+			"base_url_endpoint": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
-			"url": "https://rebrickable.com/api/v3/lego/minifigs/",
+			"url": "@{linkedService().base_url_endpoint}",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous",
 			"authHeaders": {
