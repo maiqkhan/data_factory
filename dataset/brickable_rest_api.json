@@ -1,12 +1,32 @@
 {
-	"name": "minifigs",
+	"name": "brickable_rest_api",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Rebrickable REST API",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"base_url_endpoint": {
+					"value": "@dataset().base_url_endpoint",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"base_url_endpoint": {
+				"type": "string"
+			},
+			"resource_endpoint": {
+				"type": "string"
+			}
 		},
 		"annotations": [],
 		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@dataset().resource_endpoint",
+				"type": "Expression"
+			}
+		},
 		"schema": []
 	}
 }

@@ -1,0 +1,20 @@
+{
+	"name": "Json1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ADLSg2_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "test2.json",
+				"folderPath": "rebrickable/lego/minifigs",
+				"fileSystem": "raw"
+			}
+		},
+		"schema": {}
+	}
+}

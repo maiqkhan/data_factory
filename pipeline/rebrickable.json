@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "rebrickable",
 	"properties": {
 		"activities": [
 			{
@@ -25,31 +25,49 @@
 						}
 					},
 					"sink": {
-						"type": "ParquetSink",
+						"type": "JsonSink",
 						"storeSettings": {
 							"type": "AzureBlobFSWriteSettings",
 							"copyBehavior": "FlattenHierarchy"
 						},
 						"formatSettings": {
-							"type": "ParquetWriteSettings"
+							"type": "JsonWriteSettings"
 						}
 					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "minifigs",
-						"type": "DatasetReference"
+						"referenceName": "brickable_rest_api",
+						"type": "DatasetReference",
+						"parameters": {
+							"base_url_endpoint": {
+								"value": "@pipeline().parameters.base_url_endpoint",
+								"type": "Expression"
+							},
+							"resource_endpoint": {
+								"value": "@pipeline().parameters.resource_endpoint",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet1",
+						"referenceName": "Json1",
 						"type": "DatasetReference"
 					}
 				]
 			}
 		],
+		"parameters": {
+			"base_url_endpoint": {
+				"type": "string"
+			},
+			"resource_endpoint": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
