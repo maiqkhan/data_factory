@@ -25,7 +25,7 @@
 		},
 		"Rebrickable REST API_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://rebrickable.com/api/v3/lego/minifigs/"
+			"defaultValue": "@{linkedService().base_url_endpoint}"
 		},
 		"containerUri": {
 			"type": "string",

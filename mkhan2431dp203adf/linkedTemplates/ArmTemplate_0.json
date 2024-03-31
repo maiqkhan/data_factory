@@ -25,7 +25,7 @@
 		},
 		"Rebrickable REST API_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://rebrickable.com/api/v3/lego/minifigs/"
+			"defaultValue": "@{linkedService().base_url_endpoint}"
 		}
 	},
 	"variables": {
@@ -115,6 +115,11 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"description": "This service is to connect to Rebrickable's V3 REST API.",
+				"parameters": {
+					"base_url_endpoint": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "RestService",
 				"typeProperties": {
@@ -331,21 +336,28 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/minifigs')]",
+			"name": "[concat(parameters('factoryName'), '/Json1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "Rebrickable REST API",
+					"referenceName": "ADLSg2_LS",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"type": "RestResource",
-				"typeProperties": {},
-				"schema": []
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "test2.json",
+						"folderPath": "rebrickable/lego/minifigs",
+						"fileSystem": "raw"
+					}
+				},
+				"schema": {}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Rebrickable REST API')]"
+				"[concat(variables('factoryId'), '/linkedServices/ADLSg2_LS')]"
 			]
 		},
 		{
@@ -372,6 +384,43 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ADLSg2_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/brickable_rest_api')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Rebrickable REST API",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"base_url_endpoint": {
+							"value": "@dataset().base_url_endpoint",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"base_url_endpoint": {
+						"type": "string"
+					},
+					"resource_endpoint": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": {
+						"value": "@dataset().resource_endpoint",
+						"type": "Expression"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Rebrickable REST API')]"
 			]
 		},
 		{
@@ -616,7 +665,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"name": "[concat(parameters('factoryName'), '/rebrickable')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -644,27 +693,36 @@
 								}
 							},
 							"sink": {
-								"type": "ParquetSink",
+								"type": "JsonSink",
 								"storeSettings": {
 									"type": "AzureBlobFSWriteSettings",
 									"copyBehavior": "FlattenHierarchy"
 								},
 								"formatSettings": {
-									"type": "ParquetWriteSettings"
+									"type": "JsonWriteSettings"
 								}
 							},
 							"enableStaging": false
 						},
 						"inputs": [
 							{
-								"referenceName": "minifigs",
+								"referenceName": "brickable_rest_api",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"base_url_endpoint": {
+										"value": "@pipeline().parameters.base_url_endpoint",
+										"type": "Expression"
+									},
+									"resource_endpoint": {
+										"value": "@pipeline().parameters.resource_endpoint",
+										"type": "Expression"
+									}
+								}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "Parquet1",
+								"referenceName": "Json1",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -674,11 +732,19 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"parameters": {
+					"base_url_endpoint": {
+						"type": "string"
+					},
+					"resource_endpoint": {
+						"type": "string"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/minifigs')]",
-				"[concat(variables('factoryId'), '/datasets/Parquet1')]"
+				"[concat(variables('factoryId'), '/datasets/brickable_rest_api')]",
+				"[concat(variables('factoryId'), '/datasets/Json1')]"
 			]
 		}
 	]
