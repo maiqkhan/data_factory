@@ -1,18 +1,10 @@
 {
 	"name": "rebrickable_downloads_page",
 	"properties": {
-		"parameters": {
-			"base_downloads_url": {
-				"type": "string"
-			},
-			"relative_downloads_url": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"type": "HttpServer",
 		"typeProperties": {
-			"url": "@{linkedService().base_downloads_url}",
+			"url": "https://cdn.rebrickable.com/media/downloads/",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
