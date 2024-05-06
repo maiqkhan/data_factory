@@ -17,6 +17,9 @@
 			},
 			"tableName": {
 				"type": "string"
+			},
+			"datasetName": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
