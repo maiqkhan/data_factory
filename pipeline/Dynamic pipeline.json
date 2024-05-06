@@ -135,6 +135,10 @@
 										"tableName": {
 											"value": "@item().tableName",
 											"type": "Expression"
+										},
+										"datasetName": {
+											"value": "@item().tableName",
+											"type": "Expression"
 										}
 									}
 								}
