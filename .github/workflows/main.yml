@@ -20,23 +20,23 @@ jobs:
 
     - name: Install ADF Utilities package
       run: npm install
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{ GITHUB.WORKSPACE }}/build
 
 # Validates all of the Data Factory resources in the repository. You'll get the same validation
     - name: Validate
-      run: npm run build validate ${{github.workspace}}  /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/dp-203/providers/Microsof.DataFactory/factories/mkhan2431dp203adf
-      working-directory: ${{github.workspace}}/build
+      run: npm run build validate ${{ GITHUB.WORKSPACE }}  /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/dp-203/providers/Microsof.DataFactory/factories/mkhan2431dp203adf
+      working-directory: ${{ GITHUB.WORKSPACE }}/build
 
     - name: Validate and  Generate ARM template
-      run: npm run build export ${{github.workspace}}/ADFroot/ /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/dp-203/providers/Microsof.DataFactory/factories/mkhan2431dp203adf "ExportedArmTemplate"
-      working-directory: ${{github.workspace}}/build
+      run: npm run build export ${{GITHUB.WORKSPACE}}/ADFroot/ /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/dp-203/providers/Microsof.DataFactory/factories/mkhan2431dp203adf "ExportedArmTemplate"
+      working-directory: ${{ GITHUB.WORKSPACE }}/build
 
 # Upload Artifact 
     - name: upload artifact
       uses: actions/download-artifact@v3
       with:
         name: ExportedArmTemplate
-        path: ${{github.workspace}}/data_factory/build/ExportedArmTemplate
+        path: ${{ GITHUB.WORKSPACE }}/build/ExportedArmTemplate
 
   release:
     needs: build
