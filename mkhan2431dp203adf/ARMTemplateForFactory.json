@@ -7,10 +7,6 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "mkhan2431dp203adf"
 		},
-		"ADLSg2_LS_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'ADLSg2_LS'"
-		},
 		"AdventureWorksSQLDB_LS_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AdventureWorksSQLDB_LS'"
@@ -22,6 +18,10 @@
 		"ADLSg2_LS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://mkhan2431dp203demo.dfs.core.windows.net/"
+		},
+		"AzureKeyVault_LS_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://mkhan2431KeyVault.vault.azure.net/"
 		},
 		"Rebrickable REST API_properties_typeProperties_url": {
 			"type": "string",
@@ -197,6 +197,10 @@
 												"tableName": {
 													"value": "@item().tableName",
 													"type": "Expression"
+												},
+												"datasetName": {
+													"value": "@item().tableName",
+													"type": "Expression"
 												}
 											}
 										}
@@ -226,6 +230,100 @@
 				"[concat(variables('factoryId'), '/datasets/GenericAzureSQLDB_DS')]",
 				"[concat(variables('factoryId'), '/datasets/GenericADLSg2CSV_DS')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Intro_Pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data from sql db to data lake",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "CustomerSQL_DS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CustomerCSV_DS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CustomerSQL_DS')]",
+				"[concat(variables('factoryId'), '/datasets/CustomerCSV_DS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ci_cd_test')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pipeline_demo')]",
@@ -297,89 +395,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/CustomerSQL_DS')]",
 				"[concat(variables('factoryId'), '/datasets/CustomerCSV_DS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/rebrickable')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "RestSource",
-								"httpRequestTimeout": "00:01:40",
-								"requestInterval": "00.00:00:00.010",
-								"requestMethod": "GET",
-								"paginationRules": {
-									"supportRFC5988": "true"
-								}
-							},
-							"sink": {
-								"type": "JsonSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings",
-									"copyBehavior": "FlattenHierarchy"
-								},
-								"formatSettings": {
-									"type": "JsonWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "brickable_rest_api",
-								"type": "DatasetReference",
-								"parameters": {
-									"base_url_endpoint": {
-										"value": "@pipeline().parameters.base_url_endpoint",
-										"type": "Expression"
-									},
-									"resource_endpoint": {
-										"value": "@pipeline().parameters.resource_endpoint",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Json1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"base_url_endpoint": {
-						"type": "string"
-					},
-					"resource_endpoint": {
-						"type": "string"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/brickable_rest_api')]",
-				"[concat(variables('factoryId'), '/datasets/Json1')]"
 			]
 		},
 		{
@@ -517,6 +532,9 @@
 					},
 					"tableName": {
 						"type": "string"
+					},
+					"datasetName": {
+						"type": "string"
 					}
 				},
 				"annotations": [],
@@ -529,7 +547,7 @@
 							"type": "Expression"
 						},
 						"folderPath": {
-							"value": "@concat(\n    dataset().serverName,\n    '/',\n    dataset().databaseName,\n    '/Year=',\n    formatDateTime(utcnow(), 'yyyy'),\n    '/Month=',\n    formatDateTime(utcnow(), 'MM'),\n    '/Day=',\n    formatDateTime(utcnow(), 'dd')\n)",
+							"value": "@concat(\n    dataset().serverName,\n    '/',\n    dataset().databaseName,\n    '/',\n    dataset().datasetName,\n    '/Year=',\n    formatDateTime(utcnow(), 'yyyy'),\n    '/Month=',\n    formatDateTime(utcnow(), 'MM'),\n    '/Day=',\n    formatDateTime(utcnow(), 'dd')\n)",
 							"type": "Expression"
 						},
 						"fileSystem": "raw"
@@ -633,43 +651,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/brickable_rest_api')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Rebrickable REST API",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"base_url_endpoint": {
-							"value": "@dataset().base_url_endpoint",
-							"type": "Expression"
-						}
-					}
-				},
-				"parameters": {
-					"base_url_endpoint": {
-						"type": "string"
-					},
-					"resource_endpoint": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "RestResource",
-				"typeProperties": {
-					"relativeUrl": {
-						"value": "@dataset().resource_endpoint",
-						"type": "Expression"
-					}
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Rebrickable REST API')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ADLSg2_LS')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -679,12 +660,18 @@
 				"typeProperties": {
 					"url": "[parameters('ADLSg2_LS_properties_typeProperties_url')]",
 					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('ADLSg2_LS_accountKey')]"
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AzureKeyVault_LS",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "Data-Lake-Access-Key"
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureKeyVault_LS')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AdventureWorksSQLDB_LS')]",
@@ -695,6 +682,19 @@
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('AdventureWorksSQLDB_LS_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureKeyVault_LS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AzureKeyVault_LS_properties_typeProperties_baseUrl')]"
 				}
 			},
 			"dependsOn": []
@@ -745,6 +745,13 @@
 					}
 				}
 			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default')]",
+			"type": "Microsoft.DataFactory/factories/globalparameters",
+			"apiVersion": "2018-06-01",
+			"properties": {},
 			"dependsOn": []
 		}
 	]

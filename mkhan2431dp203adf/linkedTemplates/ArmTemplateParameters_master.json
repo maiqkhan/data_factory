@@ -5,9 +5,6 @@
 		"factoryName": {
 			"value": "mkhan2431dp203adf"
 		},
-		"ADLSg2_LS_accountKey": {
-			"value": ""
-		},
 		"AdventureWorksSQLDB_LS_connectionString": {
 			"value": ""
 		},
@@ -16,6 +13,9 @@
 		},
 		"ADLSg2_LS_properties_typeProperties_url": {
 			"value": "https://mkhan2431dp203demo.dfs.core.windows.net/"
+		},
+		"AzureKeyVault_LS_properties_typeProperties_baseUrl": {
+			"value": "https://mkhan2431KeyVault.vault.azure.net/"
 		},
 		"Rebrickable REST API_properties_typeProperties_url": {
 			"value": "@{linkedService().base_url_endpoint}"
