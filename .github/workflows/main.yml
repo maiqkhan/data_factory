@@ -24,11 +24,11 @@ jobs:
 
 # Validates all of the Data Factory resources in the repository. You'll get the same validation
     - name: Validate
-      run: npm run build validate ${{github.workspace}}  /subscriptions/<subscriptionID>/resourceGroups/<resourceGroupName>/providers/Microsof.DataFactory/factories/<ADFname>
+      run: npm run build validate ${{github.workspace}}  /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/dp-203/providers/Microsof.DataFactory/factories/mkhan2431dp203adf
       working-directory: ${{github.workspace}}/build
 
     - name: Validate and  Generate ARM template
-      run: npm run build export ${{github.workspace}}/ADFroot/ /subscriptions/<subID>/resourceGroups/<resourceGroupName>/providers/Microsof.DataFactory/factories/<ADFname> "ExportedArmTemplate"
+      run: npm run build export ${{github.workspace}}/ADFroot/ /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/dp-203/providers/Microsof.DataFactory/factories/mkhan2431dp203adf "ExportedArmTemplate"
       working-directory: ${{github.workspace}}/build
 
 # Upload Artifact 
